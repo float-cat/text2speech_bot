@@ -6,7 +6,8 @@ on:
     branches: [ master ]
 
 jobs:
-  pre_commit-pyright-mypy:
+  pre_commit:
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,9 +26,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-           ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-
 
       - name: run pre-commit-action
           uses: pre-commit/action@v2.0.0
