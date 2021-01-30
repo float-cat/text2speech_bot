@@ -31,4 +31,4 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: run pre-commit-action
-          uses: pre-commit/action@v2.0.0
+        uses: pre-commit/action@v2.0.0
