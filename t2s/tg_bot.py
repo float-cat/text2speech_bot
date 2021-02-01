@@ -16,14 +16,17 @@ env_config["ID_FOLDER"] = os.environ.get("GLOBAL_ID_FOLDER")
 
 # Bot Config
 bot_config = {}
-bot_config["sex"] = "male"
-bot_config["voice"] = "filipp"
+bot_config["sex"] = 'male'
+bot_config["voice"] = 'filipp'
 bot_config["dialog"] = 0
 
 # Speackers names
 speakers = {}
-speakers["female"] = ["alena", "oksana", "jane", "omazh"]
-speakers["male"] = ["filipp", "zahar", "ermil", "nick"]
+speakers['female'] = {
+    'alyss': 'Элис', 'jane': 'Джейн',
+    'oksana': 'Оксана', 'omazh': 'Омаж'
+}
+speakers['male'] = {'zahar': 'Захар', 'ermil': 'Ермил'}
 
 # Dialog processing status
 gd_status = {"normal": 0, "wait_speaker": 1}
@@ -57,7 +60,7 @@ async def change_sex(message: types.Message):
     if bot_config["sex"] == "male":
         bot_config["sex"] = "female"
         # Need uses dictionary for male voices
-        bot_config["voice"] = speakers["female"][0]
+        bot_config["voice"] = speakers["female"].keys()[0]
         await bot.send_message(
             message.chat.id,
             "Пол голоса был изменен на женский"
@@ -65,7 +68,7 @@ async def change_sex(message: types.Message):
     else:
         bot_config["sex"] = "male"
         # Need uses dictionary for male voices
-        bot_config["voice"] = speakers["male"][0]
+        bot_config["voice"] = speakers["male"].keys()[0]
         await bot.send_message(
             message.chat.id,
             "Пол голоса был изменен на мужской"
@@ -75,8 +78,8 @@ async def change_sex(message: types.Message):
 @dp.message_handler(commands=["speaker"])
 async def change_speaker(message: types.Message):
     speaker_list = ""
-    for speaker in speakers[bot_config["sex"]]:
-        speaker_list += speaker + " "
+    for speaker in speakers[bot_config["sex"]].keys():
+        speaker_list += speakers[bot_config["sex"]][speaker] + " "
     bot_config["dialog"] = gd_status["wait_speaker"]
     await bot.send_message(message.chat.id, speaker_list)
 
@@ -84,10 +87,11 @@ async def change_speaker(message: types.Message):
 @dp.message_handler()
 async def echo(message: types.Message):
     if bot_config["dialog"] == gd_status["wait_speaker"]:
-        if message.text in speakers[bot_config["sex"]]:
+        if message.text in speakers[bot_config["sex"]].keys():
             bot_config["voice"] = message.text
             await bot.send_message(
-                message.chat.id, "Спикер изменен на " + message.text
+                message.chat.id, "Спикер изменен на " +
+                speakers[bot_config["sex"]][message.text]
             )
             bot_config["dialog"] = gd_status["normal"]
             return
