@@ -17,7 +17,7 @@ env_config["ID_FOLDER"] = os.environ.get("GLOBAL_ID_FOLDER")
 # Bot Config
 bot_config = {}
 bot_config["sex"] = 'male'
-bot_config["voice"] = 'filipp'
+bot_config["voice"] = 'zahar'
 bot_config["dialog"] = 0
 
 # Speackers names
