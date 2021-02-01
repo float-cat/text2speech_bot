@@ -1,6 +1,18 @@
 import requests
 
-def synthesize(folder_id, iam_token, text):
+def checklanguage(text):
+    rus = 0;
+    eng = 0;
+    for char in text.lower():
+        if char >= 'а' and char <= 'я':
+            rus += 1
+        elif char >= 'a' and char <= 'z':
+            eng += 1
+    if eng < rus:
+        return 'ru-RU'
+    return 'en-US'
+
+def synthesize(folder_id, iam_token, text, bot_config):
     url = 'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize'
     headers = {
         'Authorization': 'Bearer ' + iam_token,
@@ -8,8 +20,11 @@ def synthesize(folder_id, iam_token, text):
 
     data = {
         'text': text,
-        'lang': 'ru-RU',
+        'lang': bot_config['lang'],
         'folderId': folder_id
+        'speed': 1,
+        'voice': bot_config['voice'],
+        'emotion': 'good'
     }
 
     with requests.post(url, headers=headers, data=data, stream=True) as resp:
