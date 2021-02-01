@@ -24,7 +24,7 @@ def synthesize(folder_id, iam_token, text, bot_config):
         "text": text,
         "lang": bot_config["lang"],
         "folderId": folder_id,
-        "speed": 1,
+        "speed": bot_config["speed"],
         "voice": bot_config["voice"],
         "emotion": "good",
     }
