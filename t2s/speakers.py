@@ -2,8 +2,8 @@
 class Speakers(object):
     def __init__(self):
         self.__speakers = {}
-        self.__speakers["female"] = {"Элис": "alyss", "Джейн": "jane", "Оксана": "oksana", "Омаж": "omazh"}
-        self.__speakers["male"] = {"Захар": "zahar", "Ермил": "ermil"}
+        self.__speakers["female"] = {"Алена": 'alena', "Элис": "alyss", "Джейн": "jane", "Оксана": "oksana", "Омаж": "omazh"}
+        self.__speakers["male"] = {"Филипп": 'filipp', "Захар": "zahar", "Ермил": "ermil"}
 
     def getSpeakersBySex(self, sex):
         speakerlist = ""

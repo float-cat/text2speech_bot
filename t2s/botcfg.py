@@ -9,7 +9,7 @@ speakersinfo = Speakers()
 class UserCfg(object):
     def __init__(self):
         self.__sex = "male"
-        self.__voice = "zahar"
+        self.__voice = "filipp"
         self.__speed = 1
         self.__dialog = 0
         self.__lang = "ru-RU"
@@ -25,6 +25,10 @@ class UserCfg(object):
 
     def getVoice(self):
         return self.__voice
+
+    def isCorrectSpeed(self, value):
+        corrects = ['0.5','1','1.0','1.5','2','2.0']
+        return value in corrects
 
     def setSpeed(self, value):
         self.__speed = value

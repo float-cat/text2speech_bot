@@ -30,12 +30,12 @@ class TGText2SpeechBot(object):
 
     async def show_welcome(self, message):
         await self.bot.send_message(
-            message.chat.id, "Привет, " + message.from_user.first_name + "!\nЧтобы открыть меню - введи /menu"
+            message.chat.id, "Привет, " + message.from_user.first_name + "!\nЧтобы открыть меню - введи /help"
         )
 
     async def show_menu(self, message):
         await self.bot.send_message(
-            message.chat.id, "Сменить пол /sex\nСменить спикера /speaker\n" + "Установить скорость в процентах /speed"
+            message.chat.id, "Сменить пол /sex\nСменить спикера /speaker\n" + "Установить скорость /speed"
         )
 
     async def show_change_sex(self, message):
@@ -43,13 +43,13 @@ class TGText2SpeechBot(object):
         if userinfo.getSex() == "male":
             userinfo.setSex("female")
             # Need uses dictionary for male voices
-            userinfo.setVoice("Элис", userinfo.getSex())
-            await self.bot.send_message(message.chat.id, "Пол голоса был изменен на женский")
+            userinfo.setVoice("Алена", userinfo.getSex())
+            await self.bot.send_message(message.chat.id, "Пол голоса был изменен на женский, спикер - Алена")
         else:
             userinfo.setSex("male")
             # Need uses dictionary for male voices
-            userinfo.setVoice("Захар", userinfo.getSex())
-            await self.bot.send_message(message.chat.id, "Пол голоса был изменен на мужской")
+            userinfo.setVoice("Филипп", userinfo.getSex())
+            await self.bot.send_message(message.chat.id, "Пол голоса был изменен на мужской, спикер Филипп")
 
     async def show_change_speaker(self, message):
         userinfo = self.getuserinfo(message.chat.id)
@@ -59,7 +59,7 @@ class TGText2SpeechBot(object):
     async def show_change_speed(self, message):
         userinfo = self.getuserinfo(message.chat.id)
         userinfo.setDialog("wait_speed")
-        await self.bot.send_message(message.chat.id, "Введите скорость в процентах от 10 до 300")
+        await self.bot.send_message(message.chat.id, "Выберите скорость из списка доступных:\n0.5, 1, 1.5, 2.\n")
 
     async def do_echo(self, message):
         userinfo = self.getuserinfo(message.chat.id)
@@ -75,14 +75,13 @@ class TGText2SpeechBot(object):
             else:
                 userinfo.setDialog("normal")
         elif userinfo.checkDialog("wait_speed"):
-            speed_persents = float(message.text)
-            if speed_persents >= 10 and speed_persents <= 300:
-                userinfo.setSpeed(speed_persents / 100)
+            if userinfo.isCorrectSpeed(message.text):
+                userinfo.setSpeed(message.text)
             else:
                 userinfo.setDialog("normal")
-                await self.bot.send_message(message.chat.id, "Скорость должна быть от 10 до 300 процентов.\n")
+                await self.bot.send_message(message.chat.id, "Скорость должна быть из списка:\n0.5, 1, 1.5, 2.\n")
                 return
-            await self.bot.send_message(message.chat.id, f"Скорость x{speed_persents/100}\n")
+            await self.bot.send_message(message.chat.id, "Скорость x" +  message.text + "\n")
             userinfo.setDialog("normal")
             return
         userinfo.setLang(checklanguage(message.text))
@@ -101,12 +100,12 @@ tg_t2s_bot = TGText2SpeechBot(env_config)
 
 
 # Handlers
-@tg_t2s_bot.dp.message_handler(commands=["start", "help"])
+@tg_t2s_bot.dp.message_handler(commands=["start"])
 async def welcome(message: types.Message):
     await tg_t2s_bot.show_welcome(message)
 
 
-@tg_t2s_bot.dp.message_handler(commands=["menu"])
+@tg_t2s_bot.dp.message_handler(commands=["help"])
 async def menu(message: types.Message):
     await tg_t2s_bot.show_menu(message)
 

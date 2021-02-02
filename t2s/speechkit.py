@@ -17,12 +17,17 @@ def checklanguage(text):
 def synthesize(folder_id, iam_token, text, userinfo):
     url = "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize"
     headers = {"Authorization": "Bearer " + iam_token}
+    voiceid = userinfo.getVoice()
+    if voiceid == 'filipp':
+        voiceid = 'zahar'
+    elif voiceid == 'alena':
+        voiceid = 'alyss'
     data = {
         "text": text,
         "lang": userinfo.getLang(),
         "folderId": folder_id,
         "speed": userinfo.getSpeed(),
-        "voice": userinfo.getVoice(),
+        "voice": voiceid
     }
 
     with requests.post(url, headers=headers, data=data, stream=True) as resp:
