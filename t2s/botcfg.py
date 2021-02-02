@@ -27,7 +27,7 @@ class UserCfg(object):
         return self.__voice
 
     def isCorrectSpeed(self, value):
-        corrects = ['0.5','1','1.0','1.5','2','2.0']
+        corrects = ["0.5", "1", "1.0", "1.5", "2", "2.0"]
         return value in corrects
 
     def setSpeed(self, value):

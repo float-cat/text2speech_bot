@@ -18,16 +18,16 @@ def synthesize(folder_id, api_key, text, userinfo):
     url = "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize"
     headers = {"Authorization": "Api-Key " + api_key}
     voiceid = userinfo.getVoice()
-    if voiceid == 'filipp':
-        voiceid = 'zahar'
-    elif voiceid == 'alena':
-        voiceid = 'alyss'
+    if voiceid == "filipp":
+        voiceid = "zahar"
+    elif voiceid == "alena":
+        voiceid = "alyss"
     data = {
         "text": text,
         "lang": userinfo.getLang(),
         "folderId": folder_id,
         "speed": userinfo.getSpeed(),
-        "voice": voiceid
+        "voice": voiceid,
     }
 
     with requests.post(url, headers=headers, data=data, stream=True) as resp:
