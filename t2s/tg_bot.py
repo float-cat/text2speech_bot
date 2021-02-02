@@ -13,7 +13,7 @@ from speechkit import synthesize
 # Enviropment variables
 env_config = {}
 env_config["API_TOKEN"] = os.environ.get("GLOBAL_TG_TOKEN")
-env_config["IAM_TOKEN"] = os.environ.get("GLOBAL_IAM_TOKEN")
+env_config["API_KEY"] = os.environ.get("GLOBAL_API_KEY")
 env_config["ID_FOLDER"] = os.environ.get("GLOBAL_ID_FOLDER")
 
 
@@ -86,7 +86,7 @@ class TGText2SpeechBot(object):
             return
         userinfo.setLang(checklanguage(message.text))
         with open("audio.ogg", "wb") as f:
-            for audio_content in synthesize(env_config["ID_FOLDER"], env_config["IAM_TOKEN"], message.text, userinfo):
+            for audio_content in synthesize(env_config["ID_FOLDER"], env_config["API_KEY"], message.text, userinfo):
                 f.write(audio_content)
         f = open("audio.ogg", "rb")
         await self.bot.send_voice(message.from_user.id, f)

@@ -14,9 +14,9 @@ def checklanguage(text):
     return "en-US"
 
 
-def synthesize(folder_id, iam_token, text, userinfo):
+def synthesize(folder_id, api_key, text, userinfo):
     url = "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize"
-    headers = {"Authorization": "Bearer " + iam_token}
+    headers = {"Authorization": "Api-Key " + api_key}
     voiceid = userinfo.getVoice()
     if voiceid == 'filipp':
         voiceid = 'zahar'
