@@ -30,93 +30,64 @@ class TGText2SpeechBot(object):
 
     async def show_welcome(self, message):
         await self.bot.send_message(
-            message.chat.id, "Привет, " + message.from_user.first_name +
-            "!\nЧтобы открыть меню - введи /menu"
+            message.chat.id, "Привет, " + message.from_user.first_name + "!\nЧтобы открыть меню - введи /menu"
         )
 
     async def show_menu(self, message):
         await self.bot.send_message(
-            message.chat.id,
-            "Сменить пол /sex\nСменить спикера /speaker\n" +
-            "Установить скорость в процентах /speed"
+            message.chat.id, "Сменить пол /sex\nСменить спикера /speaker\n" + "Установить скорость в процентах /speed"
         )
 
     async def show_change_sex(self, message):
         userinfo = self.getuserinfo(message.chat.id)
-        if userinfo.getSex() == 'male':
-            userinfo.setSex('female')
+        if userinfo.getSex() == "male":
+            userinfo.setSex("female")
             # Need uses dictionary for male voices
-            userinfo.setVoice('Элис', userinfo.getSex())
-            await self.bot.send_message(
-                message.chat.id,
-                "Пол голоса был изменен на женский"
-            )
+            userinfo.setVoice("Элис", userinfo.getSex())
+            await self.bot.send_message(message.chat.id, "Пол голоса был изменен на женский")
         else:
-            userinfo.setSex('male')
+            userinfo.setSex("male")
             # Need uses dictionary for male voices
-            userinfo.setVoice('Захар', userinfo.getSex())
-            await self.bot.send_message(
-                message.chat.id,
-                "Пол голоса был изменен на мужской"
-            )
+            userinfo.setVoice("Захар", userinfo.getSex())
+            await self.bot.send_message(message.chat.id, "Пол голоса был изменен на мужской")
 
     async def show_change_speaker(self, message):
         userinfo = self.getuserinfo(message.chat.id)
-        userinfo.setDialog('wait_speaker')
-        await self.bot.send_message(
-            message.chat.id,
-            speakersinfo.getSpeakersBySex(userinfo.getSex())
-        )
+        userinfo.setDialog("wait_speaker")
+        await self.bot.send_message(message.chat.id, speakersinfo.getSpeakersBySex(userinfo.getSex()))
 
     async def show_change_speed(self, message):
         userinfo = self.getuserinfo(message.chat.id)
-        userinfo.setDialog('wait_speed')
-        await self.bot.send_message(
-            message.chat.id,
-            'Введите скорость в процентах от 10 до 300'
-        )
+        userinfo.setDialog("wait_speed")
+        await self.bot.send_message(message.chat.id, "Введите скорость в процентах от 10 до 300")
 
     async def do_echo(self, message):
         userinfo = self.getuserinfo(message.chat.id)
         if len(message.text) > 4000:
-            await self.bot.send_message(
-                message.chat.id,
-                "Слишком большое сообщение, надо не более 4000 символов"
-            )
+            await self.bot.send_message(message.chat.id, "Слишком большое сообщение, надо не более 4000 символов")
             return
-        if userinfo.checkDialog('wait_speaker'):
+        if userinfo.checkDialog("wait_speaker"):
             if speakersinfo.isSpeaker(message.text, userinfo.getSex()):
                 userinfo.setVoice(message.text, userinfo.getSex())
-                await self.bot.send_message(
-                    message.chat.id, "Спикер изменен на " + message.text
-                )
-                userinfo.setDialog('normal')
+                await self.bot.send_message(message.chat.id, "Спикер изменен на " + message.text)
+                userinfo.setDialog("normal")
                 return
             else:
-                userinfo.setDialog('normal')
-        elif userinfo.checkDialog('wait_speed'):
+                userinfo.setDialog("normal")
+        elif userinfo.checkDialog("wait_speed"):
             speed_persents = float(message.text)
             if speed_persents >= 10 and speed_persents <= 300:
                 userinfo.setSpeed(speed_persents / 100)
             else:
-                userinfo.setDialog('normal')
-                await self.bot.send_message(
-                    message.chat.id,
-                    "Скорость должна быть от 10 до 300 процентов.\n"
-                )
+                userinfo.setDialog("normal")
+                await self.bot.send_message(message.chat.id, "Скорость должна быть от 10 до 300 процентов.\n")
                 return
-            await self.bot.send_message(
-                message.chat.id, f"Скорость x{speed_persents/100}\n"
-            )
-            userinfo.setDialog('normal')
+            await self.bot.send_message(message.chat.id, f"Скорость x{speed_persents/100}\n")
+            userinfo.setDialog("normal")
             return
         userinfo.setLang(checklanguage(message.text))
         with open("audio.ogg", "wb") as f:
-            for audio_content in synthesize(
-                env_config["ID_FOLDER"],
-                env_config["IAM_TOKEN"],
-                message.text, userinfo
-            ):
+            for audio_content in synthesize(env_config["ID_FOLDER"], env_config["IAM_TOKEN"], message.text, userinfo):
                 f.write(audio_content)
         f = open("audio.ogg", "rb")
         await self.bot.send_voice(message.from_user.id, f)

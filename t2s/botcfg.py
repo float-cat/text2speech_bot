@@ -1,21 +1,18 @@
 from speakers import Speakers
+
 # Bot Config
 # Dialog processing status
-gd_status = {
-    'normal': 0,
-    'wait_speaker': 1,
-    'wait_speed': 2
-}
+gd_status = {"normal": 0, "wait_speaker": 1, "wait_speed": 2}
 speakersinfo = Speakers()
 
 
 class UserCfg(object):
     def __init__(self):
-        self.__sex = 'male'
-        self.__voice = 'zahar'
+        self.__sex = "male"
+        self.__voice = "zahar"
         self.__speed = 1
         self.__dialog = 0
-        self.__lang = 'ru-RU'
+        self.__lang = "ru-RU"
 
     def setSex(self, value):
         self.__sex = value
