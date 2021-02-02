@@ -15,4 +15,4 @@ class Speakers(object):
         return name in self.__speakers[sex].keys()
 
     def getSpeakerId(self, name, sex):
-        return self.__speakers[sex]
+        return self.__speakers[sex][name]
