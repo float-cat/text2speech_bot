@@ -66,7 +66,7 @@ class TGText2SpeechBot(object):
         if len(message.text) > 4000:
             await self.bot.send_message(message.chat.id, "Слишком большое сообщение, надо не более 4000 символов")
             return
-        if userinfo.checkDialog("wait_speaker") == 1:
+        if userinfo.checkDialog("wait_speaker"):
             if speakersinfo.isSpeaker(message.text, userinfo.getSex()):
                 userinfo.setVoice(message.text, userinfo.getSex())
                 await self.bot.send_message(message.chat.id, "Спикер изменен на " + message.text)
@@ -74,7 +74,7 @@ class TGText2SpeechBot(object):
                 return
             else:
                 userinfo.setDialog("normal")
-        elif userinfo.checkDialog("wait_speed") == 1:
+        elif userinfo.checkDialog("wait_speed"):
             speed_persents = float(message.text)
             if speed_persents >= 10 and speed_persents <= 300:
                 userinfo.setSpeed(speed_persents / 100)
