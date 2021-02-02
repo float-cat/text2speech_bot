@@ -81,7 +81,7 @@ class TGText2SpeechBot(object):
                 userinfo.setDialog("normal")
                 await self.bot.send_message(message.chat.id, "Скорость должна быть из списка:\n0.5, 1, 1.5, 2.\n")
                 return
-            await self.bot.send_message(message.chat.id, "Скорость x" +  message.text + "\n")
+            await self.bot.send_message(message.chat.id, "Скорость x" + message.text + "\n")
             userinfo.setDialog("normal")
             return
         userinfo.setLang(checklanguage(message.text))
@@ -90,6 +90,7 @@ class TGText2SpeechBot(object):
                 f.write(audio_content)
         f = open("audio.ogg", "rb")
         await self.bot.send_voice(message.from_user.id, f)
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
