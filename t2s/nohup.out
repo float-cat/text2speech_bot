@@ -1,0 +1,17 @@
+INFO:aiogram:Bot: TextToSpeech [@tts_tg_bot]
+WARNING:aiogram:Updates were skipped successfully.
+INFO:aiogram.dispatcher.dispatcher:Start polling.
+INFO:aiogram:Bot: TextToSpeech [@tts_tg_bot]
+WARNING:aiogram:Updates were skipped successfully.
+INFO:aiogram.dispatcher.dispatcher:Start polling.
+INFO:aiogram:Bot: TextToSpeech [@tts_tg_bot]
+WARNING:aiogram:Updates were skipped successfully.
+INFO:aiogram.dispatcher.dispatcher:Start polling.
+Traceback (most recent call last):
+  File "tg_bot.py", line 35, in <module>
+    bot = Bot(token=env_config["API_TOKEN"])
+  File "/home/tgbot/.local/lib/python3.8/site-packages/aiogram/bot/base.py", line 68, in __init__
+    api.check_token(token)
+  File "/home/tgbot/.local/lib/python3.8/site-packages/aiogram/bot/api.py", line 67, in check_token
+    raise exceptions.ValidationError(message)
+aiogram.utils.exceptions.ValidationError: Token is invalid! It must be 'str' type instead of <class 'NoneType'> type.
