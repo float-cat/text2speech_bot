@@ -22,7 +22,7 @@ def synthesize(folder_id, iam_token, text, userinfo):
         "lang": userinfo.getLang(),
         "folderId": folder_id,
         "speed": userinfo.getSpeed(),
-        "voice": userinfo.getVoice,
+        "voice": userinfo.getVoice(),
     }
 
     with requests.post(url, headers=headers, data=data, stream=True) as resp:
