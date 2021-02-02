@@ -16,7 +16,9 @@ bot = telebot.TeleBot(bot_config["TG_TOKEN"])
 @bot.message_handler(commands=["start"])
 def start_message(message):
     bot.send_message(
-        message.chat.id, "Привет, " + message.from_user.first_name + "!\nИспользуй команду /changesex для смены пола"
+        message.chat.id,
+        "Привет, " + message.from_user.first_name +
+        "!\nИспользуй команду /changesex для смены пола"
     )
 
 
@@ -36,7 +38,9 @@ def send_text(message):
     # bot_config['GLOBAL_IAM_TOKEN'],
     # bot_config['GLOBAL_ID_FOLDER'], message.text)
     sk_adapter.getAudio(
-        message.from_user.username, sk_adapter.rus_to_translite(message.text.lower()), bot_config["TG_SEX"]
+        message.from_user.username,
+        sk_adapter.rus_to_translite(message.text.lower()),
+        bot_config["TG_SEX"]
     )
     sk_adapter.botSendAudio(bot, message.from_user.username, message.chat.id)
 

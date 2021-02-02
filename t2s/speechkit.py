@@ -14,19 +14,17 @@ def checklanguage(text):
     return "en-US"
 
 
-def synthesize(folder_id, iam_token, text, bot_config):
+def synthesize(folder_id, iam_token, text, userinfo):
     url = "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize"
     headers = {
-        "Authorization": "Bearer " + iam_token,
+        'Authorization': 'Bearer ' + iam_token
     }
-
     data = {
-        "text": text,
-        "lang": bot_config["lang"],
-        "folderId": folder_id,
-        "speed": bot_config["speed"],
-        "voice": bot_config["voice"],
-        "emotion": "good",
+        'text': text,
+        'lang': userinfo.getLang(),
+        'folderId': folder_id,
+        'speed': userinfo.getSpeed(),
+        'voice': userinfo.getVoice,
     }
 
     with requests.post(url, headers=headers, data=data, stream=True) as resp:

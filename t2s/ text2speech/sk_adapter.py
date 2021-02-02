@@ -1,4 +1,4 @@
-# Функции получения аудио от яндекс.клауд и отправки пользователю
+# Функции получения аудио от text2speech.org и отправки пользователю
 import os
 
 import requests
@@ -78,7 +78,12 @@ def getAudio(username, text, sex):
     voicetype = "Female US"
     if sex == "male":
         voicetype = "Male US"
-    headers = {"text": text, "voice": voicetype, "speed": "Normal", "outname": username + "_result"}
+    headers = {
+        'text': text,
+        'voice': voicetype,
+        'speed': 'Normal',
+        'outname': username + '_result'
+    }
     # Передаем запрос на получение ссылки ответа
     r = requests.post(url, headers)
     answerHTML = r.content.decode("utf-8")
