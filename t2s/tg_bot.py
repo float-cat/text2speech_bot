@@ -91,7 +91,6 @@ class TGText2SpeechBot(object):
         f = open("audio.ogg", "rb")
         await self.bot.send_voice(message.from_user.id, f)
 
-
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
