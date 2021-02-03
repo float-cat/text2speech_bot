@@ -19,7 +19,7 @@ class Speakers(object):
     def __init__(self):
         self.__speakers = {}
         self.__speakers["ru-RU"] = {"male": "filipp", "female": "alena"}
-        self.__speakers["male"] = {"male": "nick", "female": "alyss"}
+        self.__speakers["en-US"] = {"male": "nick", "female": "alyss"}
 
     def getSpeakerId(self, lang, sex):
         return self.__speakers[lang][sex]
