@@ -92,7 +92,7 @@ class TGText2SpeechBot(object):
 
             except RuntimeError:
                 await self.bot.send_message(message.chat.id, "Похоже что волшебная палочка сломалась :(")
-        f = open("audio.ogg", "rb")
+        f = open(audiofile, "rb")
         await self.bot.send_voice(message.from_user.id, f)
 
 
@@ -107,26 +107,6 @@ tg_t2s_bot = TGText2SpeechBot(env_config)
 @tg_t2s_bot.dp.message_handler(commands=["start"])
 async def welcome(message: types.Message):
     await tg_t2s_bot.show_welcome(message)
-
-
-@tg_t2s_bot.dp.message_handler(commands=["help"])
-async def menu(message: types.Message):
-    await tg_t2s_bot.show_menu(message)
-
-
-@tg_t2s_bot.dp.message_handler(commands=["sex"])
-async def change_sex(message: types.Message):
-    await tg_t2s_bot.show_change_sex(message)
-
-
-@tg_t2s_bot.dp.message_handler(commands=["speaker"])
-async def change_speaker(message: types.Message):
-    await tg_t2s_bot.show_change_speaker(message)
-
-
-@tg_t2s_bot.dp.message_handler(commands=["speed"])
-async def change_speed(message: types.Message):
-    await tg_t2s_bot.show_change_speed(message)
 
 
 @tg_t2s_bot.dp.message_handler()
