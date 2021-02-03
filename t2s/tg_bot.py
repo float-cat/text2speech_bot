@@ -86,8 +86,14 @@ class TGText2SpeechBot(object):
             return
         userinfo.setLang(checklanguage(message.text))
         with open("audio.ogg", "wb") as f:
-            for audio_content in synthesize(env_config["ID_FOLDER"], env_config["API_KEY"], message.text, userinfo):
-                f.write(audio_content)
+            await self.bot.send_message(message.chat.id, "Происходит магия...")
+            try:
+                for audio_content in synthesize(
+                    env_config["ID_FOLDER"], env_config["API_KEY"], message.text, userinfo
+                ):
+                    f.write(audio_content)
+            except RuntimeError:
+                await self.bot.send_message(message.chat.id, "Похоже что волшебная палочка сломалась :(")
         f = open("audio.ogg", "rb")
         await self.bot.send_voice(message.from_user.id, f)
 

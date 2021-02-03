@@ -1,11 +1,12 @@
 для участников comptechschool
-* создаем в github projects задачу
-* создаем ветку, наследовавшись от `stage` в виде `nicname-<name-branch-based-on-name-task>` (без `<>`)
+
+* создаем ветку, наследовавшись от `stage` в виде `nicname-<name-feature>` (без `<>`)
 * добавляете/удаляете/изменяете/.. нужный код
-* проверить все ли pass/tokens/.. убраны (к примеру, заменив их на `your_code`)
+* проверить все ли pass/tokens/.. убраны (к примеру, заменив их на `your_pass`)
 * опишите как запускать ваш код в `readme.md`
 * добавьте нужные зависимости в корне проекта `requirements.txt` (советую использовать [pipreqs](https://github.com/bndr/pipreqs)
-* запускаете [pre-commit](https://github.com/pre-commit/pre-commit)
+* выполните [pre-commit](https://github.com/pre-commit/pre-commit)
   * `$ pip install -U reorder-python-imports flake8 black pre-commit`
   * `$ pre-commit run -a`
-* создаете pull request в ветку `stage`
+* создаете pull request (pr) в ветку `stage`
+* в pr справа в "projects" выбираете "team bord", чтобы создать задачу в github projects
