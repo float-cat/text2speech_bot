@@ -1,15 +1,9 @@
-from speakers import Speakers
-
 # Bot Config
-# Dialog processing status
-gd_status = {"normal": 0, "wait_speaker": 1, "wait_speed": 2}
-speakersinfo = Speakers()
 
 
 class UserCfg(object):
     def __init__(self):
         self.__sex = "male"
-        self.__voice = "filipp"
         self.__speed = 1
         self.__dialog = 0
         self.__lang = "ru-RU"
@@ -20,27 +14,11 @@ class UserCfg(object):
     def getSex(self):
         return self.__sex
 
-    def setVoice(self, value, sex):
-        self.__voice = speakersinfo.getSpeakerId(value, sex)
-
-    def getVoice(self):
-        return self.__voice
-
-    def isCorrectSpeed(self, value):
-        corrects = ["0.5", "1", "1.0", "1.5", "2", "2.0"]
-        return value in corrects
-
     def setSpeed(self, value):
         self.__speed = value
 
     def getSpeed(self):
         return self.__speed
-
-    def setDialog(self, value):
-        self.__dialog = gd_status[value]
-
-    def checkDialog(self, value):
-        return self.__dialog == gd_status[value]
 
     def setLang(self, value):
         self.__lang = value

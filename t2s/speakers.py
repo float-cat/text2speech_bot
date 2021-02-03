@@ -1,24 +1,25 @@
 # Speackers names
+
+
+def checklanguage(text):
+    rus = 0
+    eng = 0
+    for char in text.lower():
+        if char >= "а" and char <= "я":
+            rus += 1
+        elif char >= "a" and char <= "z":
+            eng += 1
+    if eng < rus:
+        return "ru-RU"
+    else:
+        return "en-US"
+
+
 class Speakers(object):
     def __init__(self):
         self.__speakers = {}
-        self.__speakers["female"] = {
-            "Алена": "alena",
-            "Элис": "alyss",
-            "Джейн": "jane",
-            "Оксана": "oksana",
-            "Омаж": "omazh",
-        }
-        self.__speakers["male"] = {"Филипп": "filipp", "Захар": "zahar", "Ермил": "ermil"}
+        self.__speakers["ru-RU"] = {"male": "filipp", "female": "alena"}
+        self.__speakers["male"] = {"male": "nick", "female": "alyss"}
 
-    def getSpeakersBySex(self, sex):
-        speakerlist = ""
-        for speaker in self.__speakers[sex].keys():
-            speakerlist += speaker + " "
-        return speakerlist
-
-    def isSpeaker(self, name, sex):
-        return name in self.__speakers[sex].keys()
-
-    def getSpeakerId(self, name, sex):
-        return self.__speakers[sex][name]
+    def getSpeakerId(self, lang, sex):
+        return self.__speakers[lang][sex]
