@@ -93,7 +93,7 @@ class TGText2SpeechBot(object):
                 ):
                     f.write(audio_content)
             except RuntimeError:
-                await self.bot.send_message(message.chat.id, "Похоже что волшебная\nпалочка сломалась :(")
+                await self.bot.send_message(message.chat.id, "Похоже что волшебная палочка сломалась :(")
         f = open("audio.ogg", "rb")
         await self.bot.send_voice(message.from_user.id, f)
 
