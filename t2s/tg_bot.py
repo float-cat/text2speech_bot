@@ -88,7 +88,9 @@ class TGText2SpeechBot(object):
         with open("audio.ogg", "wb") as f:
             await self.bot.send_message(message.chat.id, "Происходит магия...")
             try:
-                for audio_content in synthesize(env_config["ID_FOLDER"], env_config["API_KEY"], message.text, userinfo):
+                for audio_content in synthesize(
+                    env_config["ID_FOLDER"], env_config["API_KEY"], message.text, userinfo
+                ):
                     f.write(audio_content)
             except RuntimeError:
                 print("test")
