@@ -1,7 +1,8 @@
 для участников comptechschool
+
 * создаем ветку, наследовавшись от `stage` в виде `nicname-<name-feature>` (без `<>`)
 * добавляете/удаляете/изменяете/.. нужный код
-* проверить все ли pass/tokens/.. убраны (к примеру, заменив их на `your_code`)
+* проверить все ли pass/tokens/.. убраны (к примеру, заменив их на `your_pass`)
 * опишите как запускать ваш код в `readme.md`
 * добавьте нужные зависимости в корне проекта `requirements.txt` (советую использовать [pipreqs](https://github.com/bndr/pipreqs)
 * выполните [pre-commit](https://github.com/pre-commit/pre-commit)
