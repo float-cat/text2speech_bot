@@ -7,6 +7,7 @@ from aiogram import executor
 from aiogram import types
 from botcfg import BotCfg
 from keyboard import BotKeyboard
+from preprocessing import TextPreprocessing
 from speakers import checklanguage
 from speechkit import synthesize
 
@@ -86,7 +87,7 @@ class TGText2SpeechBot(object):
             await self.bot.send_message(message.chat.id, "Происходит магия...")
             try:
                 for audio_content in synthesize(
-                    env_config["ID_FOLDER"], env_config["API_KEY"], message.text, userinfo
+                    env_config["ID_FOLDER"], env_config["API_KEY"], TextPreprocessing(message.text), userinfo
                 ):
                     f.write(audio_content)
 
