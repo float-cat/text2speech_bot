@@ -81,7 +81,7 @@ class TGText2SpeechBot(object):
             await self.change_speed(message, userinfo)
             return
         userinfo.setLang(checklanguage(message.text))
-        audiofile = message.from_user.username + "_audio.ogg"
+        audiofile = "synthesizes/%d_%d.ogg" % (message.chat.id, userinfo.asyncid())
         with open(audiofile, "wb") as f:
             await self.bot.send_message(message.chat.id, "Происходит магия...")
             try:
@@ -89,11 +89,15 @@ class TGText2SpeechBot(object):
                     env_config["ID_FOLDER"], env_config["API_KEY"], message.text, userinfo
                 ):
                     f.write(audio_content)
+                f.close()
 
             except RuntimeError:
                 await self.bot.send_message(message.chat.id, "Похоже что волшебная палочка сломалась :(")
+
         f = open(audiofile, "rb")
         await self.bot.send_voice(message.from_user.id, f)
+        f.close()
+        os.remove(audiofile)
 
 
 # Configure logging
