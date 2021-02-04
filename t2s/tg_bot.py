@@ -7,9 +7,9 @@ from aiogram import executor
 from aiogram import types
 from botcfg import BotCfg
 from keyboard import BotKeyboard
+from preprocessing import TextPreprocessing
 from speakers import checklanguage
 from speechkit import synthesize
-from preprocessing import TextPreprocessing
 
 # Enviropment variables
 env_config = {}
