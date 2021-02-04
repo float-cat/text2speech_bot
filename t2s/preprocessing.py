@@ -7,7 +7,7 @@ def TextPreprocessing(text):
     # delete html tags
     text = re.sub(r"(\<(\/?[^>]+)>)", " ", text)
     # delete links
-    text = re.sub(r"http[\w\W]*? ", " Здесь ссылка ", text)
+    text = re.sub(r"http\S+", " ссылка ", text)
     # removing extra spaces
     text = re.sub(r"\s+", " ", text)
     return text
