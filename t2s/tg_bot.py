@@ -5,11 +5,11 @@ from aiogram import Bot
 from aiogram import Dispatcher
 from aiogram import executor
 from aiogram import types
-from botcfg import BotCfg
-from keyboard import BotKeyboard
-from preprocessing import TextPreprocessing
-from speakers import checklanguage
-from speechkit import synthesize
+from t2s.botcfg import BotCfg
+from t2s.keyboard import BotKeyboard
+from t2s.preprocessing import TextPreprocessing
+from t2s.speakers import checklanguage
+from t2s.speechkit import synthesize
 
 # Enviropment variables
 env_config = {}
