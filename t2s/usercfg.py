@@ -28,6 +28,5 @@ class UserCfg(object):
     def getLang(self):
         return self.__lang
 
-    def asyncid(self):
-        self.__asyncid = (self.__asyncid + 1) % 100
-        return self.__asyncid
+    def getAsyncMgr(self):
+        return self.__asyncmgr
