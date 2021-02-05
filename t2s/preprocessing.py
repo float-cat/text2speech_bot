@@ -1,15 +1,15 @@
 import re
 
 
-def TextPreprocessing(text):
+def TextPreprocessing(text: str) -> (str):
 
     text = re.sub(r"<script[\w\W]*?<\/script>", "", text)
     text = re.sub(r"<button[\w\W]*?<\/button>", "", text)
 
-    # delete html tags
+    # remove html tags
     text = re.sub(r"(\<(\/?[^>]+)>)", " ", text)
 
-    # delete links
+    # remove links
     text = re.sub(r"http\S+", " ссылка ", text)
 
     # removing extra spaces
