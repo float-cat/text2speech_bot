@@ -5,6 +5,7 @@ from aiogram import Bot
 from aiogram import Dispatcher
 from aiogram import executor
 from aiogram import types
+
 from t2s.botcfg import BotCfg
 from t2s.keyboard import BotKeyboard
 from t2s.preprocessing import TextPreprocessing
@@ -19,23 +20,22 @@ env_config["ID_FOLDER"] = os.environ.get("GLOBAL_ID_FOLDER")
 
 
 class TGText2SpeechBot(object):
-
     def __init__(self, env_config):
         # Initialize bot and dispatcher
-    
+
         self.bot = Bot(token=env_config["API_TOKEN"])
         self.dp = Dispatcher(self.bot)
         self.__keyboard = BotKeyboard()
-    
+
         # Bot Config
         self.__botcfg = BotCfg()
 
     def getuserinfo(self, chatid):
-    
+
         return self.__botcfg.userInfo(chatid)
 
     async def show_welcome(self, message):
-    
+
         await self.bot.send_message(
             message.chat.id,
             "Привет, " + message.from_user.first_name + "!",
@@ -43,15 +43,15 @@ class TGText2SpeechBot(object):
         )
 
     async def change_sex(self, message, userinfo):
-    
+
         lastidx = len(message.text) - 1
         sexsetup = message.text[1:lastidx]
-    
+
         if sexsetup == "Женский":
             userinfo.setSex("female")
         else:
             userinfo.setSex("male")
-    
+
         await self.bot.send_message(
             message.chat.id,
             "Пол голоса был изменен на " + sexsetup.lower(),
@@ -132,6 +132,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Create bot
 tg_t2s_bot = TGText2SpeechBot(env_config)
+
 
 # Handlers
 @tg_t2s_bot.dp.message_handler(commands=["start"])
