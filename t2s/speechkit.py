@@ -2,16 +2,42 @@ import requests
 from speakers import Speakers
 
 
-speakersinfo = Speakers()
-
-
 class SpeechKitAdapter(object):
+    """Класс SpeechKitAdapter реализует получение аудио от сервиса Yandex SpeechKit
+
+    Основное применение - получение аудио от сервиса YSK
+
+    Атрибуты
+    --------
+    folder_id
+        символьный идентификатор рабочего каталога в сервисах cloud.yandex.ru
+    api_key
+        символьный идентификатор ключа АПИ для сервисов cloud.yandex.ru
+    t2sbot
+        объект класса TGText2SpeechBot (из tg_bot.py)
+
+    Методы
+    ------
+    def synthesize(self, text, userinfo):
+        отправляет запрос на синтез речи из переданного текста
+
+    async def getAudio(self, chatid, text, asyncinfo, fileid):
+        асинхронное получение аудио
+    """
+
     def __init__(self, folder_id, api_key, t2sbot):
+        self.__speakersinfo = Speakers()
         self.__folder_id = folder_id
         self.__api_key = api_key
         self.__t2sbot = t2sbot
 
     def synthesize(self, text, userinfo):
+        """Метод для получения синтезированной речи от сервиса cloud.yandex.ru
+        Вход: текст для синтеза, объект UserCfg (из usercfg.py)
+        Выход: итерируемый объект
+        Задача: синтезироваать речь
+        """
+
         url = "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize"
         headers = {"Authorization": "Api-Key " + self.__api_key}
         data = {
@@ -19,7 +45,7 @@ class SpeechKitAdapter(object):
             "lang": userinfo.getLang(),
             "folderId": self.__folder_id,
             "speed": userinfo.getSpeed(),
-            "voice": speakersinfo.getSpeakerId(userinfo.getLang(), userinfo.getSex()),
+            "voice": self.__speakersinfo.getSpeakerId(userinfo.getLang(), userinfo.getSex()),
         }
 
         with requests.post(url, headers=headers, data=data, stream=True) as resp:
@@ -30,6 +56,13 @@ class SpeechKitAdapter(object):
                 yield chunk
 
     async def getAudio(self, chatid, text, asyncinfo, fileid):
+        """Метод для формирования
+        Вход: идентификатор чата, текст, набор параметров смещения,
+            идентификатор файла
+        Выход: пусто
+        Задача: сохранить полученное аудио
+        """
+
         asyncid = asyncinfo["asyncid"]
         uniqueid = asyncinfo["uniqueid"]
         offset = asyncinfo["offset"]

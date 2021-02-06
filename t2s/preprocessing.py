@@ -2,17 +2,26 @@ import re
 
 
 def TextPreprocessing(text: str) -> (str):
+    """Функция для предобработки текста с целью удаления нежелательных элементов:
+    ссылок, тегов, лишних пробелов
+        Вход: уникальный идентификатор чата
+        Выход: объект класса UserCfg (из usercfg.py)
+        Задача: вернуть объект с данными пользователя по идентификатору
+            чата, если объекта нет в списке - создать объект
+        Исключения: если элемента по ключу не существует - вызывает IndexError
+    """
 
     text = re.sub(r"<script[\w\W]*?<\/script>", "", text)
     text = re.sub(r"<button[\w\W]*?<\/button>", "", text)
 
-    # remove html tags
+    # Удаление тегов HTML
     text = re.sub(r"(\<(\/?[^>]+)>)", " ", text)
 
-    # remove links
+    # Сокрытие ссылок
     text = re.sub(r"http\S+", " ссылка ", text)
 
-    # removing extra spaces
+    # Удаление лишних пробелов
     text = re.sub(r"\s+", " ", text)
 
+    # Удаление пробелов по краям
     return text.strip()
