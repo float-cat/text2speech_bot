@@ -1,5 +1,4 @@
 import requests
-
 from speakers import Speakers
 
 

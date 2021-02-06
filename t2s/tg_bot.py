@@ -11,9 +11,9 @@ from asyncmgr import WAIT_MORE
 from audiosender import SenderMgr
 from botcfg import BotCfg
 from keyboard import BotKeyboard
+from preprocessing import TextPreprocessing
 from speakers import checklanguage
 from speechkit import SpeechKitAdapter
-from preprocessing import TextPreprocessing
 
 MAX_LEN_SEGMENT = 500
 
@@ -66,7 +66,7 @@ class TGText2SpeechBot(object):
         )
 
     async def change_speed(self, message, userinfo):
-    
+
         speedsetup = float(message.text[1:])
         userinfo.setSpeed(speedsetup)
 

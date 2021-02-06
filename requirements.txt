@@ -1,5 +1,5 @@
-requests==2.22.0
-pydub==0.24.1
 aiogram==2.11.2
-pyTelegramBotAPI==3.7.6
 ffmpeg==4.0+
+pydub==0.24.1
+pyTelegramBotAPI==3.7.6
+requests==2.22.0

@@ -1,5 +1,6 @@
 # Buffer of multimessage
 
+
 class BufferMsg(object):
     def __init__(self, uniqueids, msg):
         self.__uniqueids = uniqueids
