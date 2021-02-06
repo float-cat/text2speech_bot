@@ -51,17 +51,14 @@ class TGText2SpeechBot(object):
 
     async def change_sex(self, message, userinfo):
 
-        lastidx = len(message.text) - 1
-        sexsetup = message.text[1:lastidx]
-
-        if sexsetup == "Женский":
+        if message.text == "Жeнский":
             userinfo.setSex("female")
         else:
             userinfo.setSex("male")
 
         await self.bot.send_message(
             message.chat.id,
-            "Пол голоса был изменен на " + sexsetup.lower(),
+            "Пол голоса был изменен на " + message.text.lower(),
             reply_markup=self.__keyboard.getKeyboardsByState("menu"),
         )
 

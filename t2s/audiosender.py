@@ -25,7 +25,7 @@ class SenderMgr(object):
             inputfile = AudioSegment.from_ogg(audiofile)
             outputfile += inputfile
             os.remove(audiofile)
-        outputfile.export(audiooutputfile, format="ogg")
+        outputfile.export(audiooutputfile, format="ogg", codec="libopus")
 
     async def audioSend(self, chatid, asyncid):
         audiofile = "synthesizes/%d_%d.ogg" % (chatid, asyncid)
