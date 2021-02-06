@@ -15,4 +15,4 @@
 * учет задач ведется с помощью [github projects](https://github.com/vtrokhymenko/text2speech_bot/projects/1)
 * основное обсуждение – [github discussions](https://github.com/vtrokhymenko/text2speech_bot/discussions)
 * содействие в проект – [CONTRIBUTING.md](./CONTRIBUTING.md)
-* техническая документация (в скором времени..)
+* [техническая документация](https://docs.google.com/document/d/1Tby2kgqtaEe28O-ZC9ePsSMEASLG5M1t07tjQYhByXE/edit?usp=sharing)
