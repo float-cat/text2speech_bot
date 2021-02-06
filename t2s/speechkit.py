@@ -29,19 +29,20 @@ class SpeechKitAdapter(object):
             for chunk in resp.iter_content(chunk_size=None):
                 yield chunk
 
-    async def getAudio(self, message, asyncinfo, fileid):
+    async def getAudio(self, chatid, text, asyncinfo, fileid):
         asyncid = asyncinfo["asyncid"]
         uniqueid = asyncinfo["uniqueid"]
         offset = asyncinfo["offset"]
-        userinfo = self.__t2sbot.getuserinfo(message.chat.id)
-        audiofile = "synthesizes/%d_%d_%d.ogg" % (message.chat.id, asyncid, fileid)
+        userinfo = self.__t2sbot.getuserinfo(chatid)
+        audiofile = "synthesizes/%d_%d_%d.ogg" % (chatid, asyncid, fileid)
         with open(audiofile, "wb") as f:
             try:
                 shift = offset + uniqueid
-                for audio_content in self.synthesize(message.text[offset:shift], userinfo):
+                for audio_content in self.synthesize(text[offset:shift], userinfo):
                     f.write(audio_content)
                 f.close()
-                await self.__t2sbot.onReceivedFile(message.chat.id, asyncid, uniqueid)
+                userinfo.getAsyncMgr().registerUniqueId(asyncid, uniqueid)
+                await self.__t2sbot.onReceivedFile(chatid, asyncid, uniqueid)
 
             except RuntimeError:
-                await self.__t2sbot.bot.send_message(message.chat.id, "Похоже что волшебная палочка сломалась :(")
+                self.__t2sbot.bot.send_message(chatid, "Похоже что волшебная палочка сломалась :(")

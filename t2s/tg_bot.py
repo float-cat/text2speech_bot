@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 
@@ -5,6 +6,7 @@ from aiogram import Bot
 from aiogram import Dispatcher
 from aiogram import executor
 from aiogram import types
+from asyncmgr import MERGE_TIMEOUT
 from asyncmgr import WAIT_MORE
 from audiosender import SenderMgr
 from botcfg import BotCfg
@@ -12,7 +14,7 @@ from keyboard import BotKeyboard
 from speakers import checklanguage
 from speechkit import SpeechKitAdapter
 
-MAX_LEN_SEGMENT = 120
+MAX_LEN_SEGMENT = 500
 
 # Enviropment variables
 env_config = {}
@@ -62,9 +64,27 @@ class TGText2SpeechBot(object):
             message.chat.id, f"Скорость теперь {speedsetup}", reply_markup=self.__keyboard.getKeyboardsByState("menu")
         )
 
+    async def askt2s_service(self, chatid, asyncid):
+        await asyncio.sleep(MERGE_TIMEOUT)
+        userinfo = self.getuserinfo(chatid)
+        multimsg = userinfo.getBufferMgr().getMultiMsg(asyncid)
+        indexofsegment = 0
+        for i in range(0, multimsg.numberMessages()):
+            uniqueids = multimsg.getMessage(i).getUniqueIds()
+            text = multimsg.getMessage(i).getMsg()
+            startsegment = 0
+            for j in range(0, len(uniqueids)):
+                test = startsegment
+                if startsegment > 0:
+                    test += 1
+                asyncinfo = {"asyncid": asyncid, "uniqueid": uniqueids[j], "offset": test}
+                asyncio.create_task(self.__text2speechAdapter.getAudio(chatid, text, asyncinfo, indexofsegment + j))
+                startsegment += uniqueids[j]
+            indexofsegment += len(uniqueids)
+
     async def do_echo(self, message):
         userinfo = self.getuserinfo(message.chat.id)
-        elif message.text == "Пoл М/Ж":
+        if message.text == "Пoл М/Ж":
             await self.bot.send_message(
                 message.chat.id, "Выберите пол", reply_markup=self.__keyboard.getKeyboardsByState("sex")
             )
@@ -84,33 +104,23 @@ class TGText2SpeechBot(object):
             return
         userinfo.setLang(checklanguage(message.text))
         asyncid = userinfo.getAsyncMgr().getAsyncId()
+        if userinfo.getLastAsyncId() != asyncid:
+            await self.bot.send_message(message.chat.id, "Происходит магия...")
+            userinfo.setLastAsyncId(asyncid)
+            asyncio.create_task(self.askt2s_service(message.chat.id, asyncid))
         uniqueids = userinfo.getAsyncMgr().genUniqueIdsFree(message.text, MAX_LEN_SEGMENT)
         userinfo.getAsyncMgr().registerChunksNumber(asyncid, len(uniqueids))
-        startsegment = 0
-        # DBG Добавить пробелы к тексту сообщения, если уник больше длины текста
-        await self.bot.send_message(message.chat.id, "Происходит магия...")
-        for i in range(0, len(uniqueids)):
-            offset = startsegment
-            if startsegment > 0:
-                offset += 1
-            asyncinfo = {"asyncid": asyncid, "uniqueid": uniqueids[i], "offset": offset}
-            userinfo.getAsyncMgr().registerUniqueId(asyncid, uniqueids[i])
-            await self.__text2speechAdapter.getAudio(message, asyncinfo, i)
-            startsegment += uniqueids[i]
+        userinfo.getBufferMgr().pushMsg(asyncid, uniqueids, message.text)
 
     async def onReceivedFile(self, chatid, asyncid, uniqueid):
         asyncmanager = self.getuserinfo(chatid).getAsyncMgr()
         asyncid = asyncmanager.onReceiveUniqueId(uniqueid)
-        if asyncid != WAIT_MORE:
+        while asyncid != WAIT_MORE:
             number = asyncmanager.numberOnChunks(asyncid)
             self.__sendermgr.chunksMerge(chatid, asyncid, number)
             await self.__sendermgr.audioSend(chatid, asyncid)
+            self.getuserinfo(chatid).getBufferMgr().delMsg(asyncid)
             asyncid = asyncmanager.isTopReady()
-            while asyncid != WAIT_MORE:
-                number = asyncmanager.numberOnChunks(asyncid)
-                self.__sendermgr.chunksMerge(chatid, asyncid, number)
-                await self.__sendermgr.audioSend(chatid, asyncid)
-                asyncid = asyncmanager.isTopReady()
 
 
 # Configure logging

@@ -1,0 +1,4 @@
+requests==2.24.0
+pydub==0.24.1
+aiogram==2.11.2
+pyTelegramBotAPI==3.7.6

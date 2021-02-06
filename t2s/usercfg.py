@@ -1,5 +1,6 @@
 # User config
 from asyncmgr import AsyncMgr
+from buffermgr import BufferMgr
 
 
 class UserCfg(object):
@@ -9,6 +10,8 @@ class UserCfg(object):
         self.__dialog = 0
         self.__lang = "ru-RU"
         self.__asyncmgr = AsyncMgr()
+        self.__buffermgr = BufferMgr()
+        self.__lastasyncid = -1
 
     def setSex(self, value):
         self.__sex = value
@@ -30,3 +33,12 @@ class UserCfg(object):
 
     def getAsyncMgr(self):
         return self.__asyncmgr
+
+    def setLastAsyncId(self, asyncid):
+        self.__lastasyncid = asyncid
+
+    def getLastAsyncId(self):
+        return self.__lastasyncid
+
+    def getBufferMgr(self):
+        return self.__buffermgr

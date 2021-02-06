@@ -1,5 +1,6 @@
 # Merge files and send
 import os
+
 from pydub import AudioSegment
 
 
@@ -10,10 +11,7 @@ class SenderMgr(object):
     def chunksMerge(self, chatid, asyncid, number):
         audiooutputfile = "synthesizes/%d_%d.ogg" % (chatid, asyncid)
         if number == 1:
-            os.rename(
-                "synthesizes/%d_%d_0.ogg" % (chatid, asyncid),
-                "synthesizes/%d_%d.ogg" % (chatid, asyncid)
-            )
+            os.rename("synthesizes/%d_%d_0.ogg" % (chatid, asyncid), "synthesizes/%d_%d.ogg" % (chatid, asyncid))
             return
         audiofile1 = "synthesizes/%d_%d_0.ogg" % (chatid, asyncid)
         audiofile2 = "synthesizes/%d_%d_1.ogg" % (chatid, asyncid)

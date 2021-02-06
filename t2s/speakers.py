@@ -5,8 +5,13 @@ def checklanguage(text):
     for char in text.lower():
         if char >= "а" and char <= "я":
             return "ru-RU"
-        else:
-            return "en-US"
+    checknumber = 0
+    for char in text:
+        if (char >= "0" and char <= "9") or char == " " or char == "-":
+            checknumber += 1
+    if checknumber == len(text):
+        return "ru-RU"
+    return "en-US"
 
 
 class Speakers(object):

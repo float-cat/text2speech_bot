@@ -2,7 +2,7 @@
 import time
 
 
-MERGE_TIMEOUT = 2
+MERGE_TIMEOUT = 1
 END_OF_CHUNKS = 100
 WAIT_CHUNK_DATA = 0
 DATA_RECEIVED = 1
@@ -50,6 +50,7 @@ class AsyncInfo(object):
                 chunk.setDataReceived()
                 self.__received += 1
                 retval = True
+                break
         if self.__number == self.__received:
             self.__status = RECEIVED_ALL_DATA
         return retval
@@ -84,11 +85,11 @@ class AsyncMgr(object):
     def updateAsync(self):
         newtime = time.time()
         if newtime - self.__lasttime > MERGE_TIMEOUT:
+            self.__lasttime = newtime
             if self.__asyncid > -1:
                 self.__asynctasks[self.__asyncid].setStatusWaitAllData()
             return True
         return False
-        self.__lasttime = newtime
 
     def getAsyncId(self):
         if self.updateAsync():
