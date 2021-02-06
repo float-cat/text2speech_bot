@@ -10,6 +10,7 @@ class BotKeyboard(object):
         self.__keyboards = {}
         self.__button_speed = KeyboardButton("Скoрость")
         self.__button_speed_cases = []
+
         for val in self.__speeds:
             self.__button_speed_cases.append(KeyboardButton(val))
         self.__button_sex = KeyboardButton("Пoл М/Ж")
@@ -25,6 +26,7 @@ class BotKeyboard(object):
     def getKeyboardsByState(self, kb):
         if kb in self.__keyboards.keys():
             return self.__keyboards[kb]
+
         else:
             return self.__keyboards[self.__keyboards.keys()[0]]
 
