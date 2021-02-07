@@ -11,7 +11,6 @@
   * преобразование текста в голосовую речь с помощью внешних служб (text2speech.org, яндекс speechkit и др.)
   * дополнительную функциональность (скорость воспроизведения и голос)
 
-<<<<<<< HEAD
 =======
 ## структура проекта
 ```markdown
@@ -52,7 +51,6 @@
 └── .pre-commit-config.yaml
 ```
 
->>>>>>> origin/master
 ## другое
 * учет задач ведется с помощью [github projects](https://github.com/vtrokhymenko/text2speech_bot/projects/1)
 * основное обсуждение – [github discussions](https://github.com/vtrokhymenko/text2speech_bot/discussions)
