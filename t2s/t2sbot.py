@@ -8,14 +8,14 @@ from aiogram import Bot
 from aiogram import Dispatcher
 from aiogram import executor
 from aiogram import types
-from asyncmgr import MERGE_TIMEOUT
-from asyncmgr import WAIT_MORE
-from audiosender import SenderMgr
-from botcfg import BotCfg
-from keyboard import BotKeyboard
-from preprocessing import TextPreprocessing
-from speakers import checklanguage
-from speechkitadapter import SpeechKitAdapter
+from asyncmgr import MERGE_TIMEOUT # noqa: E402
+from asyncmgr import WAIT_MORE # noqa: E402
+from audiosender import SenderMgr # noqa: E402
+from botcfg import BotCfg # noqa: E402
+from keyboard import BotKeyboard # noqa: E402
+from preprocessing import TextPreprocessing # noqa: E402
+from speakers import checklanguage # noqa: E402
+from speechkitadapter import SpeechKitAdapter # noqa: E402
 
 MAX_LEN_SEGMENT = 500
 
