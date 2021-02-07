@@ -25,14 +25,40 @@ env_config["ID_FOLDER"] = os.environ.get("GLOBAL_ID_FOLDER")
 
 
 class TGText2SpeechBot(object):
+    """Класс TGText2SpeechBot реализует основную работу программы
+
+    Основное применение - это главный класс проекта, класс описывает
+    логику бота
+
+    Атрибуты
+    --------
+    env_config
+        словарь с необходимыми переменными окружения, такими как токен бота или ключ API
+
+    Методы
+    ------
+    getuserinfo
+        получение информации о пользователе
+    show_welcome
+        сообщение приветствия
+    change_sex
+        смена спикера на спикера другого пола
+    change_speed
+        смена скорости
+    askt2s_service
+        асинхронная задача для запуска асинхронного скачивания
+    do_echo
+        обработчик сообщений от пользователя
+    onReceivedFile
+        функция обратного вызова для проверки завершения приема данных
+    """
+
     def __init__(self, env_config):
-        # Initialize bot and dispatcher
 
         self.bot = Bot(token=env_config["API_TOKEN"])
         self.dp = Dispatcher(self.bot)
         self.__keyboard = BotKeyboard()
 
-        # Bot Config
         self.__botcfg = BotCfg()
         self.__text2speechAdapter = SpeechKitAdapter(env_config["ID_FOLDER"], env_config["API_KEY"], self)
         self.__sendermgr = SenderMgr(self)
@@ -72,30 +98,56 @@ class TGText2SpeechBot(object):
         )
 
     async def askt2s_service(self, chatid, asyncid):
+        """Метод асинхронного запроса к серверу преобразования текст в голос
+        Вход: идентификатор чата, идентификатор асинхронной обработки
+        Выход: пусто
+        Задача: запустить несколько асинхронных задач для скачивания результатов
+        Примечание: Должна запускаться как асинхронная задача
+        """
 
+        # Вызываем асинхронный вариант sleep
         await asyncio.sleep(MERGE_TIMEOUT)
+        # Используем дополнительные переменные для более коротого кода
         userinfo = self.getuserinfo(chatid)
         multimsg = userinfo.getBufferMgr().getMultiMsg(asyncid)
+        # Переменная отслеживает одномерный индекс для двухмерного цикла
         indexofsegment = 0
 
+        # Цикл обработки сообщений из мультисообщения (BufferMultiMsg)
         for i in range(0, multimsg.numberMessages()):
             uniqueids = multimsg.getMessage(i).getUniqueIds()
             text = multimsg.getMessage(i).getMsg()
+            # Переменная отслеживает смещение блока в сообщении
             startsegment = 0
-
+            # Цикл обработки одинарного сообщения.
+            #   Разбивает на блоки и создает асинхронную задачу получения аудио
             for j in range(0, len(uniqueids)):
-                test = startsegment
+                # Переменная отслеживает дополнение смещения
+                shift = startsegment
 
+                # Если блок не первый (уже есть смещение) - то добавляем 1
+                #   тем самым мы исключаем пробел
                 if startsegment > 0:
-                    test += 1
+                    shift += 1
 
-                asyncinfo = {"asyncid": asyncid, "uniqueid": uniqueids[j], "offset": test}
+                # Заполняем словарь параметрами, служит для сокращения числа аргументов функции
+                asyncinfo = {"asyncid": asyncid, "uniqueid": uniqueids[j], "offset": shift}
+                # Запускаем асинхронную задачу
                 asyncio.create_task(self.__text2speechAdapter.getAudio(chatid, text, asyncinfo, indexofsegment + j))
+                # отслеживаем смещение следующего блока
                 startsegment += uniqueids[j]
 
+            # Отслеживаем одномерный индекс, добавляя колво индексов одинарного сообщения
             indexofsegment += len(uniqueids)
 
     async def do_echo(self, message):
+        """Метод обрабатывает принятые сообщения от бота
+        Вход: объект сообщения из библиотеки aiogram
+        Выход: пусто (в теле метода есть явный вызов пустого возврата)
+        Задача: обработать сообщения пользовтеля, организовать обработку кнопок - т.к.
+            кнопки клавиатуры типа reply - это кнопки, которые просто отсылают в чат
+            свое название как сообщение
+        """
 
         userinfo = self.getuserinfo(message.chat.id)
 
@@ -127,45 +179,76 @@ class TGText2SpeechBot(object):
 
             return
 
+        # Вызываем предобработку текста, чтобы исключить теги и ссылки
         text = TextPreprocessing(message.text)
 
+        # Если после предобработки текст остался пустым - уходим
         if len(text) < 1:
             return
 
         userinfo.setLang(checklanguage(text))
+        # Получаем идентификатор асинхронной обработки
         asyncid = userinfo.getAsyncMgr().getAsyncId()
 
+        # Если полученый идентификатор отличается от последнего
+        #   значит таймаут склеивания сообщений истек, поступило
+        #   отдельное сообщение
         if userinfo.getLastAsyncId() != asyncid:
             await self.bot.send_message(message.chat.id, "Происходит магия...")
+            # обновляем последний идентификатор асинхронной обработки, чтобы
+            #   начать склеивать сообщения
             userinfo.setLastAsyncId(asyncid)
+            # Запукаем задачу асинхронной обработки
+            #   функция после входа засыпает, чтобы
+            #   было время склеить сообщения
             asyncio.create_task(self.askt2s_service(message.chat.id, asyncid))
 
+        # Подготавливаем уникальные идентификаторы блоков сообщений
         uniqueids = userinfo.getAsyncMgr().genUniqueIdsFree(message.text, MAX_LEN_SEGMENT)
+        # Регистрируем дополнительное количество блоков, ожидающих прием
         userinfo.getAsyncMgr().registerChunksNumber(asyncid, len(uniqueids))
+        # Размещаем сообщение в буфере
         userinfo.getBufferMgr().pushMsg(asyncid, uniqueids, message.text)
 
     async def onReceivedFile(self, chatid, asyncid, uniqueid):
+        """Метод обратной связи (callback). Передается не сам, а self этого класса
+        Вход: идентификатор чата, идентификатор асинхронной обработки, уникальный идентификатор блока
+        Выход: пусто
+        Задача: Зарегистрировать прием сообщения с уникальным идентификатором блока,
+            проверить все ли ожидаемые блоки сообщения пришли - если да - инициирует
+            склеивание файлов в один и последующую отправку пользователю,
+            затем проверяет нет ли в очереди сообщений, которые приняты полностью,
+            если да, то выполняет описанные выше процедуры и для них
+        """
 
         asyncmanager = self.getuserinfo(chatid).getAsyncMgr()
+        # Регистрируем факт приема блока по уникальному идентификатору
         asyncid = asyncmanager.onReceiveUniqueId(uniqueid)
 
+        # Пока есть сообщения, которые собрались полностью (и уже ничего не ждут)
         while asyncid != WAIT_MORE:
             number = asyncmanager.numberOnChunks(asyncid)
+            # Сливаем все блоки в один
             self.__sendermgr.chunksMerge(chatid, asyncid, number)
+            # Посылаем пользователю склееный файл
             await self.__sendermgr.audioSend(chatid, asyncid)
+            # Очищаем память, которую занимали сообщения
+            #   (Это можно сделать еще на этапе асинхронного получения аудио)
             self.getuserinfo(chatid).getBufferMgr().delMsg(asyncid)
+            # Получем идентификтор асинхронной обработки или WAIT_MORE - если сообщение
+            #   следующее в очереди не приняло еще все блоки
             asyncid = asyncmanager.isTopReady()
 
 
-# Configure logging
+# Настраиваем логирование
 logging.basicConfig(level=logging.INFO)
 
-# Create bot
+# Создаем главный объект программы
 tg_t2s_bot = TGText2SpeechBot(env_config)
 
 
-# Handlers
-@tg_t2s_bot.dp.message_handler(commands=["start"])
+# Вешаем обработчики на события
+@tg_t2s_bot.dp.message_handler(commands=["start", "help"])
 async def welcome(message: types.Message):
     await tg_t2s_bot.show_welcome(message)
 
@@ -175,5 +258,6 @@ async def echo(message: types.Message):
     await tg_t2s_bot.do_echo(message)
 
 
+# Запускаем бота
 if __name__ == "__main__":
     executor.start_polling(tg_t2s_bot.dp, skip_updates=True)
