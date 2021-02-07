@@ -2,11 +2,11 @@
 
  Инструкция по запуску
 * установите python3.7
-* определите переменные окружения
+* определите переменные окружения (для speechkit)
 ```sh
-$ export GLOBAL_TG_TOKEN='Здесь токен бота'
-$ export GLOBAL_API_KEY='Здесь ключ API'
-$ export GLOBAL_ID_FOLDER='Идентификатор каталога'
+$ export GLOBAL_TG_TOKEN="Здесь токен бота"
+$ export GLOBAL_API_KEY="Здесь ключ API"
+$ export GLOBAL_ID_FOLDER="Здесь идентификатор каталога"
 ```
 * для запуска выполните
 ```sh
