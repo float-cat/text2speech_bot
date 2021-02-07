@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import os
+import sys
+sys.path.insert(0, "modules")
 
 from aiogram import Bot
 from aiogram import Dispatcher
@@ -13,7 +15,7 @@ from botcfg import BotCfg
 from keyboard import BotKeyboard
 from preprocessing import TextPreprocessing
 from speakers import checklanguage
-from speechkit import SpeechKitAdapter
+from speechkitadapter import SpeechKitAdapter
 
 MAX_LEN_SEGMENT = 500
 
