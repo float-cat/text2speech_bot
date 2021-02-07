@@ -23,7 +23,6 @@
 │   │   ├── minimalbot.py
 │   │   ├── sk_adapter.py
 │   │   └── README.md
-│   │
 │   └── README.md
 │
 ├── t2s
@@ -38,7 +37,6 @@
 │   │   ├── speechkitadapter.py
 │   │   ├── usercfg.py
 │   │   └── README.md
-│   │
 │   ├── t2sbot.py
 │   └── README.md
 │
